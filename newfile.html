@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fertilizer Usage Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Your existing CSS styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f7;
+            color: #444;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: #00796b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #00796b;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #00796b;
+            color: white;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #004d40;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1rem;
+            color: #777;
+        }
+
+        .forecast-box {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e0f7fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .forecast-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #00796b;
+        }
+
+        .forecast-box .forecast-day {
+            display: inline-block;
+            margin-right: 15px;
+            width: calc(33% - 15px);
+            text-align: center;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .forecast-box .forecast-day img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .forecast-box .forecast-day p {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .rain-probability {
+            background-color: #ffebee;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        header .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .rain-probability h3 {
+            font-size: 1.3rem;
+            color: #d32f2f;
+        }
+
+        .rain-probability p {
+            font-size: 1rem;
+            color: #d32f2f;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .forecast-box .forecast-day {
+                width: calc(50% - 15px); /* Two columns */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .forecast-box .forecast-day {
+                width: 100%; /* One column */
+            }
+
+            button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://t4.ftcdn.net/jpg/02/51/74/57/500_F_251745745_aylu8FQ7i7ESVqwLmBospcGU8mrU92AZ.jpg" alt="Raitha Mitra Logo" class="logo">
+        <h1>Krishi Mitra - Fertilizer Usage Calculator</h1>
+        <p>Determine the appropriate fertilizer amount based on soil moisture levels, crop type, and days since planting.</p>
+    </header>
+    <main>
+        <section>
+            <h2>Enter Soil Moisture, Crop Type, and Days Since Planting</h2>
+            <form id="fertilizer-form">
+                <label for="soil-moisture">Soil Moisture:</label>
+                <select id="soil-moisture" name="soil-moisture" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <label for="crop-type">Choose Crop Type:</label>
+                <select id="crop-type" name="crop-type">
+                    <option value="wheat">Wheat</option>
+                    <option value="rice">Rice</option>
+                    <option value="corn">Corn</option>
+                    <option value="tomato">Tomato</option>
+                    <option value="sugarcane">Sugarcane</option>
+                    <option value="cotton">Cotton</option>
+                    <option value="peanuts">Peanuts</option>
+                    <option value="groundnut">Groundnut</option>
+                    <option value="soybean">Soybean</option>
+                    <option value="chili">Chili</option>
+                    <option value="potato">Potato</option>
+                </select>
+
+                <label for="days">Days Since Planting:</label>
+                <input type="number" id="days" name="days" required min="1" max="365">
+
+                <button type="submit">Calculate Fertilizer</button>
+            </form>
+        </section>
+
+        <section id="result" style="display: none;">
+            <h2>Recommended Fertilizer Amount</h2>
+            
+            <b><p id="nitrogen-amount"></p>   </b>
+            <b><p id="phosphorus-amount"></p></b>
+            <b><p id="potassium-amount"></p></b>
+        </section>
+
+        <section id="forecast" class="forecast-box" style="display: none;">
+            <h3>7-Day Weather Forecast</h3>
+            <div id="forecast-details"></div>
+        </section>
+
+        <section id="rain-probability" class="rain-probability" style="display: none;">
+            <h3>Rain Probability Tomorrow</h3>
+            <p id="rain-chance"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Fertilizer Usage Guide. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const weatherApiKey = ''; // Replace with your WeatherAPI key
+
+        // Get user location using Geolocation API
+        document.getElementById('fertilizer-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const soilMoisture = document.getElementById('soil-moisture').value;
+            const cropType = document.getElementById('crop-type').value;
+            const days = parseInt(document.getElementById('days').value);
+
+            if (isNaN(days) || days < 1 || days > 365) {
+                alert('Please enter a valid number of days (1-365).');
+                return;
+            }
+
+            // Get geolocation
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                fetchWeatherData(lat, lon, soilMoisture, cropType, days);
+            });
+        });
+
+        // Fetch weather data from WeatherAPI
+        function fetchWeatherData(lat, lon, soilMoisture, cropType, days) {
+            const url = `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}&q=${lat},${lon}&days=7&aqi=no&alerts=no`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const temperature = data.current.temp_c;
+                    const humidity = data.current.humidity;
+                    const rainfall = data.current.precip_mm;
+                    const forecast = data.forecast.forecastday;
+                    const rainChance = forecast[1].day.daily_chance_of_rain; // Rain chance for tomorrow
+
+                    adjustFertilizerBasedOnWeather(temperature, humidity, rainfall, soilMoisture, cropType, days);
+                    displayForecast(forecast);
+                    displayRainProbability(rainChance);
+                })
+                .catch(error => console.error('Error fetching weather data:', error));
+        }
+
+        // Adjust fertilizer amount based on weather and user input
+        function adjustFertilizerBasedOnWeather(temperature, humidity, rainfall, soilMoisture, cropType, days) {
+            let moistureFactor = 1;
+            let daysFactor = 1;
+
+            switch (soilMoisture) {
+                case 'low':
+                    moistureFactor = 1.2;
+                    break;
+                case 'medium':
+                    moistureFactor = 1.0;
+                    break;
+                case 'high':
+                    moistureFactor = 0.8;
+                    break;
+            }
+
+            // Days factor (e.g., more fertilizer if it's been longer since planting)
+            daysFactor = 1 + (days / 365); 
+
+            let baseN = 100, baseP = 50, baseK = 80; // Default for wheat
+
+            switch (cropType) {
+                case 'wheat':
+                    baseN = 100; baseP = 50; baseK = 80; break;
+                case 'rice':
+                    baseN = 120; baseP = 80; baseK = 100; break;
+                case 'corn':
+                    baseN = 150; baseP = 70; baseK = 120; break;
+                case 'tomato':
+                    baseN = 100; baseP = 60; baseK = 90; break;
+                case 'sugarcane':
+                    baseN = 200; baseP = 100; baseK = 150; break;
+                case 'cotton':
+                    baseN = 160; baseP = 70; baseK = 110; break;
+                default:
+                    baseN = 100; baseP = 50; baseK = 80; break;
+            }
+
+            // Adjust fertilizer amount
+            const fertilizerAmounts = {
+                nitrogen: baseN * moistureFactor * daysFactor,
+                phosphorus: baseP * moistureFactor * daysFactor,
+                potassium: baseK * moistureFactor * daysFactor
+            };
+
+            // Display the calculated fertilizer amounts
+            displayResults(fertilizerAmounts);
+        }
+
+        // Display the calculated fertilizer amounts in the box
+        function displayResults(fertilizerAmounts) {
+            
+            document.getElementById('nitrogen-amount').textContent = `Nitrogen: ${fertilizerAmounts.nitrogen} kg/ha`;
+            document.getElementById('phosphorus-amount').textContent = `Phosphorus: ${fertilizerAmounts.phosphorus} kg/ha`;
+            document.getElementById('potassium-amount').textContent = `Potassium: ${fertilizerAmounts.potassium} kg/ha`;
+
+            document.getElementById('result').style.display = 'block';
+        }
+
+        // Display 7-day weather forecast with icons
+        function displayForecast(forecast) {
+            const forecastDetails = forecast.map(day => {
+                return `
+                    <div class="forecast-day">
+                        <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+                        <p>${day.date}: ${day.day.condition.text}</p>
+                        <p>Temp: ${day.day.avgtemp_c}°C</p>
+                        <p>Rain: ${day.day.totalprecip_mm} mm</p>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('forecast-details').innerHTML = forecastDetails;
+            document.getElementById('forecast').style.display = 'block';
+        }
+
+        // Display rain probability for tomorrow
+        function displayRainProbability(rainChance) {
+            document.getElementById('rain-chance').textContent = `Rain Probability Tomorrow: ${rainChance}%`;
+            document.getElementById('rain-probability').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
